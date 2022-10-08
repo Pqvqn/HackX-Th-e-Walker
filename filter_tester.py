@@ -5,7 +5,7 @@ from PyQt5.QtGui import *
 import cv2 as cv
 import numpy as np
 import copy
-#import PySpin
+# import PySpin
 import time
 from skimage import feature, exposure
 
@@ -415,6 +415,27 @@ class Window(QMainWindow):
             "Dilate": {
                 "function": cv.dilate,
                 "name": "Dilate",
+                "ranges": [("K Size", "o", 1, 21, (2, 1), 3)],
+                "group": "Morph"
+            },
+
+            "Gradient": {
+                "function": lambda img, ks: cv.morphologyEx(img, cv.MORPH_GRADIENT, ks),
+                "name": "Morphological Gradient",
+                "ranges": [("K Size", "o", 1, 21, (2, 1), 3)],
+                "group": "Morph"
+            },
+
+            "TopH": {
+                "function": lambda img, ks: cv.morphologyEx(img, cv.MORPH_TOPHAT, ks),
+                "name": "Top Hat",
+                "ranges": [("K Size", "o", 1, 21, (2, 1), 3)],
+                "group": "Morph"
+            },
+
+            "BlackH": {
+                "function": lambda img, ks: cv.morphologyEx(img, cv.MORPH_BLACKHAT, ks),
+                "name": "Black Hat",
                 "ranges": [("K Size", "o", 1, 21, (2, 1), 3)],
                 "group": "Morph"
             },
