@@ -1,1 +1,2 @@
-# HackX-Th-e-Walker
+# HackX: th-E-Walker
+# By th-E-boyz
