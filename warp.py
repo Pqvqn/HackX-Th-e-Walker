@@ -1,14 +1,13 @@
 import cv2
 import numpy as np
 
-img = cv2.imread('ReferenceFloor.jpg')
+img = cv2.imread('ReferenceFloor2.jpg')
 
-camPts = np.float32([[10, 3024], [1552, 1411], [2480, 1411], [4022, 3024]])
+camPts = np.float32([[6, 3024], [1562, 1373], [2470, 1373], [4026, 3024]])
 flatPts = np.float32([[0, 3024], [0, 0], [4032, 0], [4032, 3024]])
 
 mat = cv2.getPerspectiveTransform(camPts, flatPts)
-wimg = cv2.warpPerspective(img, mat, (1008*4, 756*4))
-
+wimg = cv2.warpPerspective(img, mat, (4032, 3024))
 wimg = cv2.resize(wimg, (1008, 756))
 
 cv2.imshow('Adrian', wimg)
