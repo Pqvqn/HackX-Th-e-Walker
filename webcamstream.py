@@ -22,8 +22,10 @@ while True:
     #image.save(r"Edge_Sample.png")
     #edgeim = cv2.imread(r"Edge_Sample.png")
     #cv2.imshow('Edge', edgeim)
-    roadimg = roadmask.make_mask(image)
-    cv2.imshow('Road Mask', roadimg)
+    roadmask, cnt, hiera = roadmask.make_mask(image)
+    omask, lows = roadmask.find_hazards(roadmask, cnt, hiera)
+
+    cv2.imshow('Road Mask', roadmask)
 
     c = cv2.waitKey(1)
     if c == 27:
