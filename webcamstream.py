@@ -27,7 +27,5 @@ while True:
         cv2.imwrite('edge'+str(i)+'.png', edgeim)
         i = i + 1
 
-
-
 cap.release()
 cv2.destroyAllWindows()
