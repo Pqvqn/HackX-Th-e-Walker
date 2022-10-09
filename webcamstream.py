@@ -1,5 +1,6 @@
 import cv2
 import roadmask
+import nearObjectHandle
 
 cap = cv2.VideoCapture(1)
 i = 0
@@ -29,6 +30,11 @@ while True:
     c = cv2.waitKey(1)
     if c == 27:
         break
+
+    # Handles the cases where the object is near the user, 
+    # x & y are closest object coord and imageSize == recropped immage
+    # relDist is relative distance from object to user
+    nearObjectHandle(x, y, imageSize, relDist)
 
 cap.release()
 cv2.destroyAllWindows()
