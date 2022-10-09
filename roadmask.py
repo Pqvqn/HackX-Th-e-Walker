@@ -28,7 +28,7 @@ def make_mask(in_img):
     channel_outputs = []
 
     #maskAnd = np.ones_like(cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)) * 255
-    maskAvg = np.zeros_like(cv2.cvtColor(img, cv2.COLOR_BGR2GRAY))
+    maskAvg = np.zeros_like(cv2.cvtColor(in_img, cv2.COLOR_BGR2GRAY))
 
     for space in channel_ranges:
         space_img = in_img.copy() if space[0] < 0 else cv2.cvtColor(in_img, space[0])
