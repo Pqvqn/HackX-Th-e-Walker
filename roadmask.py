@@ -53,16 +53,24 @@ def make_mask(in_img):
 
     maskAvg = cv2.erode(maskAvg, kernel)
     maskAvg = cv2.dilate(maskAvg, kernel)
-    maskAvg = cv2.dilate(maskAvg, kernel)
-    maskAvg = cv2.dilate(maskAvg, kernel)
-    maskAvg = cv2.erode(maskAvg, kernel)
-    maskAvg = cv2.erode(maskAvg, kernel)
 
-    maskAvg = cv2.blur(maskAvg, (int(in_img.shape[1]/100), int(in_img.shape[1]/100)))
+    maskAvg = cv2.blur(maskAvg, (int(in_img.shape[1]/250), int(in_img.shape[1]/250)))
 
     maskAvg = cv2.threshold(maskAvg, 125, 255, 0)[1]
 
-    return maskAvg
+    cont, hier = cv2.findContours(maskAvg, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    cont2 = []
+    for contour in cont:
+        M = cv2.moments(contour)
+        cx = int(M['m10'] / M['m00'])
+        cy = int(M['m01'] / M['m00'])
+        area = cv2.contourArea(contour)
+        if cy > in_img.shape[0] / 3 and area > in_img.shape[0] * in_img.shape[1] * 1/1000:
+            cont2.append(contour)
+
+    filledMask = cv2.drawContours(np.zeros_like(maskAvg), cont2, -1, 255, -1)
+
+    return filledMask
 
 
 if __name__ == "__main__":
