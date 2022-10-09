@@ -1,4 +1,5 @@
 import cv2
+import roadmask
 from PIL import Image, ImageFilter
 
 cap = cv2.VideoCapture(0)
@@ -16,11 +17,13 @@ while True:
     cv2.imshow('Input', frame)
     cv2.imwrite('frame.png', frame)
     image = Image.open(r"frame.png")
-    image = image.convert("L")
-    image = image.filter(ImageFilter.FIND_EDGES)
-    image.save(r"Edge_Sample.png")
-    edgeim = cv2.imread(r"Edge_Sample.png")
-    cv2.imshow('Edge', edgeim)
+    #image = image.convert("L")
+    #image = image.filter(ImageFilter.FIND_EDGES)
+    #image.save(r"Edge_Sample.png")
+    #edgeim = cv2.imread(r"Edge_Sample.png")
+    #cv2.imshow('Edge', edgeim)
+    roadimg = roadmask.make_mask(image)
+    cv2.imshow('Road Mask', roadimg)
 
     c = cv2.waitKey(1)
     if c == 27:
