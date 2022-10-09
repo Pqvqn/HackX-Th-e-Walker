@@ -1,31 +1,25 @@
-from cmath import pi
-from math import tan
+from math import cos, pi, tan
 import cv2
 
-image = cv2.imread("blob.jpg")
-dimensions = image.shape
-width = dimensions[1]
-height = dimensions[0]
-iAngle = 45
-iDist = 31.25
-iHeight = 31.25
-fAngle = 60
-fHeight = 32
+def degToRad(angle):
+    angle = (angle / 180) * pi
+    return angle
 
-print("Width:  ", width)
-print("Height: ", height)
+def readImage(filename):
+    image = cv2.imread(filename)
+    return image
 
-hwidth = int(width/2)
-for i in range(height):
-    yVal = height - 1 - i
-    color = image[yVal, hwidth]
-    #print(color)
-    if color[0] == 0:
-        print("Obstruction Detected:")
-        print("Pixel x: ", hwidth)
-        print("Pixel y: ", yVal)
-        fDist = fHeight * tan((fAngle / 180) * pi)
-        print(fDist)
-        exit()
+def distanceToObstruction(image, coords, angle, height, fov):
+    totalDist = height / tan(angle)
+    contactAngle = 90 - (angle + (fov / 2))
+    contactDist = height * tan(degToRad(contactAngle))
+    projectedPixelDist = totalDist - contactDist
+    projectionAngle = 90 + (fov / 2) + angle
+    absolutePixelDist = projectedPixelDist / cos(degToRad(projectionAngle))
 
-print("No Obstruction Detected")
+    imageHeight = image.shape[0]
+    imageWidth = image.shape[1]
+    lowest = imageHeight
+    
+    for c in coords:
+        
