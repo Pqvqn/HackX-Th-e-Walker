@@ -1,16 +1,11 @@
 import time
 import warn_user
 
-# Import the required module for text
-# to speech conversion
-from gtts import gTTS
-
 # warn_user code modified fromhttps://www.geeksforgeeks.org/convert-text-speech-python/
 
 # This module is imported so that we can
 # play the converted audio
 import os
-import playsound
 
 # Handles the cases where the object is near the user
 def nearObjectHandle(x, y, imageSize, relDist):
@@ -22,11 +17,11 @@ def nearObjectHandle(x, y, imageSize, relDist):
     # audio cue if close
     if (y >= yBound):
         if (x <= xLMBound):
-            w.warn_user("OBJECT LEFT IN " + relDist + "inches")
+            warn_user("OBJECT LEFT IN " + relDist + "inches")
         elif (x > xLMBound & x < xRMBound):
-            w.warn_user("OBJECT CENTER IN " + relDist + "inches")
+            warn_user("OBJECT CENTER IN " + relDist + "inches")
         elif (x >= xRMBound):
-            w.warn_user("OBJECT RIGHT IN " + relDist + "inches")
+            warn_user("OBJECT RIGHT IN " + relDist + "inches")
 
     # slight delay to reduce spam
     time.wait(1.5)
