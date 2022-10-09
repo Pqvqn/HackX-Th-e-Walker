@@ -62,19 +62,47 @@ def make_mask(in_img):
     cont2 = []
     for contour in cont:
         M = cv2.moments(contour)
-        cx = int(M['m10'] / M['m00'])
-        cy = int(M['m01'] / M['m00'])
-        area = cv2.contourArea(contour)
-        if cy > in_img.shape[0] / 3 and area > in_img.shape[0] * in_img.shape[1] * 1/1000:
-            cont2.append(contour)
+        if M['m00'] != 0:
+            cx = int(M['m10'] / M['m00'])
+            cy = int(M['m01'] / M['m00'])
+            area = cv2.contourArea(contour)
+            if cy > in_img.shape[0] / 3 and area > in_img.shape[0] * in_img.shape[1] * 1/1000:
+                cont2.append(contour)
 
     filledMask = cv2.drawContours(np.zeros_like(maskAvg), cont2, -1, 255, -1)
 
-    return filledMask
+    return filledMask, cont2, hier
+
+
+def find_hazards(filledMask, contourList, hierarchy):
+    outMask = cv2.cvtColor(filledMask, cv2.COLOR_GRAY2BGR).astype("uint8")
+    blankimg = np.zeros(outMask.shape[:-1])
+    for c, cnt in enumerate(contourList):
+        hull = cv2.convexHull(cnt)
+        blankimg = cv2.drawContours(blankimg, [hull], 0, 255, -1)
+        blankimg = cv2.drawContours(blankimg, [cnt], 0, 0, -1)
+
+    kernel = np.ones((int(outMask.shape[1] / 250), int(outMask.shape[1] / 250)))
+    blankimg = cv2.erode(blankimg, kernel)
+    blankimg = cv2.dilate(blankimg, kernel)
+
+    hazards, hier = cv2.findContours(blankimg.astype("uint8"), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    #blankimg = cv2.drawContours(np.zeros_like(blankimg), hazards, -1, 255, 2)
+
+    #cv2.imshow("holes", cv2.resize(blankimg.astype("uint8"), [int(blankimg.shape[1]/4), int(blankimg.shape[0]/4)]))
+    #cv2.waitKey(0)
+    #cv2.destroyAllWindows()
+
+    lowests = [h[np.argmax(h[:, :, 1])][0] for h in hazards]
+
+    return outMask, lowests
 
 
 if __name__ == "__main__":
-    img = cv2.imread('ReferenceFloor.jpg')
-    maskAvg = make_mask(img)
-    cv2.imshow("average", cv2.resize(maskAvg, [int(maskAvg.shape[1]/4), int(maskAvg.shape[0]/4)]))
+    img = cv2.imread('DIST4.jpg')
+    mask, cnt, hiera = make_mask(img)
+    omask, lows = find_hazards(mask, cnt, hiera)
+    for l in lows:
+        cv2.circle(omask, l, 5, (255,0,255), 5)
+    cv2.imshow("average", cv2.resize(omask.astype("uint8"), [int(omask.shape[1]/4), int(omask.shape[0]/4)]))
     cv2.waitKey(0)
