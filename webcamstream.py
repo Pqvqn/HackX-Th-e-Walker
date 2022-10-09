@@ -1,8 +1,7 @@
 import cv2
 import roadmask
-from PIL import Image, ImageFilter
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 i = 0
 
 # Check if the webcam is opened correctly
@@ -16,7 +15,7 @@ while True:
     frame = cv2.resize(frame, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA)
     cv2.imshow('Input', frame)
     cv2.imwrite('frame.png', frame)
-    image = Image.open(r"frame.png")
+    image = cv2.imread(r"frame.png")
     #image = image.convert("L")
     #image = image.filter(ImageFilter.FIND_EDGES)
     #image.save(r"Edge_Sample.png")
@@ -27,8 +26,7 @@ while True:
 
     c = cv2.waitKey(1)
     if c == 27:
-        cv2.imwrite('edge'+str(i)+'.png', edgeim)
-        i = i + 1
+        break
 
 cap.release()
 cv2.destroyAllWindows()
