@@ -82,29 +82,34 @@ def find_hazards(filledMask, contourList, hierarchy):
         blankimg = cv2.drawContours(blankimg, [hull], 0, 255, -1)
         blankimg = cv2.drawContours(blankimg, [cnt], 0, 0, -1)
 
-    kernel = np.ones((int(outMask.shape[1] / 250), int(outMask.shape[1] / 250)))
+    kernel = np.ones((int(outMask.shape[1] / 500), int(outMask.shape[1] / 500)))
     blankimg = cv2.erode(blankimg, kernel)
     blankimg = cv2.dilate(blankimg, kernel)
+
+
+    blankimg = cv2.blur(blankimg, (int(blankimg.shape[1] / 10), int(blankimg.shape[1] / 10)))
+
+    blankimg = cv2.threshold(blankimg, 10, 255, 0)[1]
 
     hazards, hier = cv2.findContours(blankimg.astype("uint8"), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     #blankimg = cv2.drawContours(np.zeros_like(blankimg), hazards, -1, 255, 2)
 
-    #cv2.imshow("holes", cv2.resize(blankimg.astype("uint8"), [int(blankimg.shape[1]/4), int(blankimg.shape[0]/4)]))
+    #cv2.imshow("holes", cv2.resize(blankimg.astype("uint8"), [int(blankimg.shape[1]/6), int(blankimg.shape[0]/6)]))
     #cv2.waitKey(0)
     #cv2.destroyAllWindows()
 
     lowests = [h[np.argmax(h[:, :, 1])][0] for h in hazards]
 
     for l in lowests:
-        cv2.circle(outMask, l, 5, (0,0,255), 3)
+        cv2.circle(outMask, l, 5, (0,0,255), 5)
 
     return outMask, lowests
 
 
 if __name__ == "__main__":
-    img = cv2.imread('frame.png')
+    img = cv2.imread('20221009_083346.jpg')
     mask, cnt, hiera = make_mask(img)
     omask, lows = find_hazards(mask, cnt, hiera)
    
-    cv2.imshow("average", cv2.resize(omask.astype("uint8"), [int(omask.shape[1]/4), int(omask.shape[0]/4)]))
+    cv2.imshow("average", cv2.resize(omask.astype("uint8"), [int(omask.shape[1]/6), int(omask.shape[0]/6)]))
     cv2.waitKey(0)
