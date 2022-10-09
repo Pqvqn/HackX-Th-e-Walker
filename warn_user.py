@@ -12,7 +12,7 @@ from playsound import playsound
 
 def warn_user(warnMessage):
     # The text that you want to convert to audio
-    mytext = "play.mp3"
+    mytext = "right.mp3"
 
     # Language in which you want to convert
     language = 'en'
@@ -28,10 +28,8 @@ def warn_user(warnMessage):
     myobj.save(mytext)
 
     # Playing the converted file
-    os.system("mpg321 " + mytext)
-    playsound(mytext)
-
-    os.remove(mytext)
+    #os.system("mpg321 " + mytext)
+    playsound.playsound(mytext)
 
 if __name__ == "__main__":
-    warn_user("Get out of my car")
+    warn_user("Object right")

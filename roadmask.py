@@ -95,14 +95,16 @@ def find_hazards(filledMask, contourList, hierarchy):
 
     lowests = [h[np.argmax(h[:, :, 1])][0] for h in hazards]
 
+    for l in lowests:
+        cv2.circle(outMask, l, 5, (0,0,255), 3)
+
     return outMask, lowests
 
 
 if __name__ == "__main__":
-    img = cv2.imread('DIST4.jpg')
+    img = cv2.imread('frame.png')
     mask, cnt, hiera = make_mask(img)
     omask, lows = find_hazards(mask, cnt, hiera)
-    for l in lows:
-        cv2.circle(omask, l, 5, (255,0,255), 5)
+   
     cv2.imshow("average", cv2.resize(omask.astype("uint8"), [int(omask.shape[1]/4), int(omask.shape[0]/4)]))
     cv2.waitKey(0)

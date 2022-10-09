@@ -1,6 +1,8 @@
 import cv2
 import roadmask
-import nearObjectHandle
+import os
+import disttrig
+import matplotlib.pyplot as plt
 
 cap = cv2.VideoCapture(1)
 i = 0
@@ -14,27 +16,26 @@ if not cap.isOpened():
 while True:
     ret, frame = cap.read()
     frame = cv2.resize(frame, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA)
-    cv2.imshow('Input', frame)
+    #cv2.imshow('Input', frame)
     cv2.imwrite('frame.png', frame)
-    image = cv2.imread(r"frame.png")
+    frame = cv2.imread(r"frame.png")
     #image = image.convert("L")
     #image = image.filter(ImageFilter.FIND_EDGES)
     #image.save(r"Edge_Sample.png")
     #edgeim = cv2.imread(r"Edge_Sample.png")
     #cv2.imshow('Edge', edgeim)
-    roadmask, cnt, hiera = roadmask.make_mask(image)
-    omask, lows = roadmask.find_hazards(roadmask, cnt, hiera)
+    roadimg, cnt, hiera = roadmask.make_mask(frame)
+    omask, lows = roadmask.find_hazards(roadimg, cnt, hiera)
 
-    cv2.imshow('Road Mask', roadmask)
+    #disttrig.readImage(roadimg)
+    disttrig.distanceToObstruction(roadimg, lows, 60, 7, 69.4)
+    cv2.imshow("O",omask)
+    #plt.show()
+    #cv2.imshow('Road Mask', omask)    
 
     c = cv2.waitKey(1)
     if c == 27:
         break
-
-    # Handles the cases where the object is near the user, 
-    # x & y are closest object coord and imageSize == recropped immage
-    # relDist is relative distance from object to user
-    nearObjectHandle(x, y, imageSize, relDist)
 
 cap.release()
 cv2.destroyAllWindows()

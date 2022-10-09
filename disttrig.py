@@ -1,5 +1,6 @@
 from math import cos, pi, tan
 import cv2
+import nearObjectHandle
 
 def degToRad(angle):
     angle = (angle / 180) * pi
@@ -19,7 +20,9 @@ def distanceToObstruction(image, coords, angle, height, fov):
 
     imageHeight = image.shape[0]
     imageWidth = image.shape[1]
-    lowest = imageHeight
+    lowest = (0,0)
     
     for c in coords:
-        
+        if c[1] > lowest[1]:
+            lowest = c
+    nearObjectHandle.nearObjectHandle(lowest[0], lowest[1], image.shape)
