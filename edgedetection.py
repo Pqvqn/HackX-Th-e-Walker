@@ -3,7 +3,7 @@ from PIL import Image, ImageFilter
   
 # Opening the image (R prefixed to string
 # in order to deal with '\' in paths)
-image = Image.open(r"Sidewalk.jpg")
+image = Image.open(r"opencv0.png")
   
 # Converting the image to grayscale, as edge detection 
 # requires input image to be of mode = Grayscale (L)
